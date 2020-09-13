@@ -2,6 +2,7 @@ var userFormEl = document.querySelector("#user-form");
 var nameInputEl = document.querySelector("#username");
 var repoContainerEl = document.querySelector("#repos-container");
 var repoSearchTerm = document.querySelector("#repo-search-term");
+var languageButtonsEl = document.querySelector("#language-buttons");
 
 
 var displayRepos = function(repos, searchTerm) {
@@ -53,8 +54,19 @@ if (username) {
 
 };
 
+var getFeaturedRepos = function(language) {
+  var apiUrl = "https://api.github.com/search/repositories?q=" + language + "+is:featured&sort=help-wanted-issues";
 
-
+  fetch(apiUrl).then(function(response) {
+    if (response.ok) {
+      response.json().then(function(data) {
+        displayRepos(data.items, language);
+      });
+    } else {
+      alert("Error: " + response.statusText);
+    }
+  });
+};
 var getUsersRepos = function(user) {
   // format the gitbuh api url
   var apiUrl = "https://api.github.com/users/" + user + "/repos";
@@ -81,6 +93,17 @@ var getUsersRepos = function(user) {
       console.log("outside");
     
 
+var buttonClickHandler = function(event) {
+  var language = event.target.getAttribute("data-language")
+  if (language) {
+    getFeaturedRepos(language);
+  
+    // clear old content
+    repoContainerEl.textContent = "";
+  }
+  console.log(language);
+};
+
 
 
 // getUsersRepos();
@@ -88,3 +111,6 @@ var getUsersRepos = function(user) {
 // adds sumbit listener to userFormEl
 // this kind of event needs to be at the bottom of the file
 userFormEl.addEventListener("submit", formSubmitHandler);
+
+// clicks html, css, or js buttons
+languageButtonsEl.addEventListener("click", buttonClickHandler);
