@@ -1,8 +1,17 @@
 
+  
+    
     // declaring a DOM reference
     var limitWarningEl = document.querySelector("#limit-warning");
-
     var issueContainerEl = document.querySelector("#issues-container");
+    var repoNameEl = document.querySelector("#repo-name");
+
+    var getRepoName = function() {
+        var queryString = document.location.search;
+        var repoName = queryString.split("=")[1];
+        getReposIssues(repoName);
+        repoNameEl.textContent = repoName;
+    }
 
     var displayWarning = function(repo) {
         // add text to warning container
@@ -88,5 +97,6 @@
  
 
 
-
-getReposIssues("facebook/react");
+//  removed hard coded function call
+// getReposIssues("facebook/react");
+getRepoName();
